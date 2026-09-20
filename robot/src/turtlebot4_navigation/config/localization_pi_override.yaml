@@ -1,0 +1,28 @@
+amcl:
+  ros__parameters:
+    base_frame_id: "base_footprint"
+    # Giảm số tia dùng cho mỗi lần tính trọng số hạt
+    # max_beams: 40
+
+    # Tang so luong hat len gan mac dinh TurtleBot4 (500/2000) - 300/1000
+    # qua it lam uoc luong nhieu, ket qua dinh vi kem.
+    min_particles: 500
+    max_particles: 2000
+
+    # Giam nguong cap nhat (mac dinh 0.25m / 0.2 rad ~11.5 do) de AMCL
+    # cap nhat thuong xuyen hon khi robot quay it, giup hoi tu yaw
+    # nhanh/sat hon luc dung tai waypoint.
+    update_min_d: 0.15
+    update_min_a: 0.10
+
+    # Không dùng khoảng đo quá xa trong nhà
+    laser_max_range: 12.0
+
+    #######
+    # alpha1: 0.15
+    # alpha2: 0.15
+    # alpha3: 0.15
+    # alpha4: 0.15
+    # alpha5: 0.05
+
+    transform_tolerance: 0.3

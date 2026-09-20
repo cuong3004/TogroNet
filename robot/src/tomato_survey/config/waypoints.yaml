@@ -1,0 +1,42 @@
+# Toa do that, lay tu RViz (cong cu 2D Pose Estimate, publish /initialpose)
+# tren ban do that cua robot.
+#
+# 4 vi tri quan sat = 4 waypoint trong frame map.
+# home_pose = waypoint thu 5, robot ve vi tri quy dinh sau khi quan sat xong.
+# Ca 5 pose nay duoc gui trong CUNG MOT lan goi action follow_waypoints,
+# theo dung thu tu liet ke o day (4 vi tri quan sat truoc, home sau cung).
+
+observation_waypoints:
+  # Lui 5cm nguoc huong yaw so voi diem RViz goc (qua gan cay),
+  # roi lui them 5cm nua (tong 10cm), roi lui them 5cm nua (tong 15cm).
+  - id: vi_tri_1
+    x: 0.417240
+    y: 0.200432
+    yaw: 0.7547594
+
+  # Lui 5cm nguoc huong yaw so voi diem RViz goc, roi lui them 5cm nua
+  # (tong 10cm).
+  - id: vi_tri_2
+    x: 1.217004
+    y: 0.247464
+    yaw: 0.7547593
+
+  # Xoay them 20 do sang phai (thuan chieu kim dong ho) so voi diem RViz goc
+  # (10 do truoc do + 10 do them lan nay), roi lui them 5cm nguoc huong yaw
+  # (2 lan, tong 10cm nguoc huong yaw).
+  - id: vi_tri_3
+    x: 1.411918
+    y: 0.079689
+    yaw: -1.0626952
+
+  # Xoay them 45 do sang phai (thuan chieu kim dong ho) so voi diem RViz goc.
+  - id: vi_tri_4
+    x: 2.107833
+    y: 0.159198
+    yaw: -1.1194512
+
+home_pose:
+  id: ve_vi_tri_quy_dinh
+  x: 0.0
+  y: 0.0
+  yaw: 0.0

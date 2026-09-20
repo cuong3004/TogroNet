@@ -1,0 +1,118 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 50
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    diff_drive_controller:
+      type: diff_drive_controller/DiffDriveController
+
+    imu_sensor_broadcaster:
+      type: imu_sensor_broadcaster/IMUSensorBroadcaster
+
+
+diff_drive_controller:
+  ros__parameters:
+    left_wheel_names: ["base_left_wheel_joint"]
+    right_wheel_names: ["base_right_wheel_joint"]
+
+    wheel_separation: 0.348
+    wheel_radius: 0.0665
+
+    # Base frame_id
+    base_frame_id: base_footprint
+
+    # Thứ tự:
+    # [x, y, z, roll, pitch, yaw]
+    #
+    # Wheel odometry đo x tương đối tốt.
+    # y và yaw sai số lớn hơn do trượt bánh và quay tại chỗ.
+    # z, roll, pitch không được wheel odometry quan sát.
+    pose_covariance_diagonal:
+      [0.010, 0.030, 1000000.0,
+       1000000.0, 1000000.0, 0.050]
+
+    # vx tương đối đáng tin.
+    # vy không được đo trực tiếp trên robot vi sai.
+    # wz suy ra từ chênh lệch vận tốc hai bánh.
+    twist_covariance_diagonal:
+      [0.010, 0.100, 1000000.0,
+       1000000.0, 1000000.0, 0.030]
+
+    enable_odom_tf: false
+
+    # 50 Hz là đủ cho robot chậm, giảm tải Pi và mạng DDS.
+    publish_rate: 50.0
+
+    # JGA37 khoảng 37 rpm, bánh 135 mm:
+    # vận tốc lý thuyết không tải khoảng 0.26 m/s.
+    # Giới hạn 0.20 m/s phù hợp hơn khi mang tải.
+    linear.x.max_velocity: 0.10
+    linear.x.min_velocity: -0.10
+
+    linear.x.max_acceleration: 0.20
+    linear.x.max_deceleration: -0.20
+
+    # Robot nhỏ nhưng bánh cao su dễ scrub khi quay nhanh.
+    # Giam tu 0.50 -> 0.35 -> 0.25 rad/s: quay nhanh gay rung dong co
+    # manh, lam lech tam chieu accel cua IMU (ICM20948), gay yaw fused
+    # troi vai giay sau khi dung (da do truc tiep, 0.35 rad/s + covariance
+    # 0.03 giam duoc do troi tu 18.8 do xuong con ~4.0 do). Giam tiep xuong
+    # 0.25 rad/s de giam rung dong co hon nua.
+    angular.z.max_velocity: 0.25
+    angular.z.min_velocity: -0.25
+
+    angular.z.max_acceleration: 1.00
+    angular.z.max_deceleration: -1.50
+
+    cmd_vel_timeout: 0.5
+    publish_limited_velocity: true
+    use_stamped_vel: true
+
+
+imu_sensor_broadcaster:
+  ros__parameters:
+
+    sensor_name: imu
+    frame_id: imu_link
+
+    # Yaw: SUA LOI - so do 0.0001 chi phan anh nhieu luc ON DINH (dung
+    # yen hoac quay deu). Thuc te sau khi DUNG QUAY, orientation fused
+    # noi bo cua ICM20948 (qua serial tu Pico) tu settle cham trong vai
+    # giay (rung dong co/EMI luc quay lam lech tham chieu accel, can
+    # thoi gian on dinh lai) - da do truc tiep tren robot: gz ve 0 that
+    # nhung yaw tho van troi ~1.9 deg/s hang giay. Sau khi covariance
+    # nay bi siet qua chat, EKF tin mu quang vao giai doan settle do,
+    # gay yaw fused troi hang giay sau khi robot da dung han. Quay lai
+    # 0.0100 (gia tri cu, da kiem chung KHONG bi loi nay).
+    #
+    # CAP NHAT: 0.0100 van chua du voi vong quay DAI hon (~5-6 giay lien
+    # tuc, gan voi thuc te khi robot quay tai waypoint) - da do truc tiep
+    # EKF fused van troi ~18.8 do trong ~3.8 giay sau khi dung, gan bang
+    # do troi cua chinh IMU tho (~17.3 do). Tang tiep len 0.03 (~3 lan) de
+    # EKF tin gyro (da dung dung ngay lap tuc) nhieu hon nua trong giai
+    # doan settle, giam suc keo cua yaw tuyet doi IMU dang con troi.
+    static_covariance_orientation:
+      [0.0025, 0.0,    0.0,
+       0.0,    0.0025, 0.0,
+       0.0,    0.0,    0.0300]
+
+    # Gyro Z: SUA LOI - lan truoc dung so do "luc dang quay" (var ~0.0008,
+    # gom ca rung dong co that) de noi long covariance nay, nhung rung
+    # dong co la TIN HIEU THAT chu khong phai nhieu do luong. Noi long
+    # covariance nay khien EKF cham tin gyro bao ve 0 that luc robot da
+    # dung han -> yaw fused troi tiep hang giay sau khi banh xe da dung
+    # (da kiem chung tren robot that). Quay lai dung so do LUC DUNG YEN
+    # (std ~0.33 deg/s, var ~3.3e-5) phan anh dung do chinh xac cam bien,
+    # dat 0.0001 (std ~0.57 deg/s, ~3 lan bien an toan) de EKF tin gyro
+    # nhanh, bam ve 0 ngay khi robot dung that.
+    static_covariance_angular_velocity:
+      [0.0004, 0.0,    0.0,
+       0.0,    0.0004, 0.0,
+       0.0,    0.0,    0.0001]
+
+    static_covariance_linear_acceleration:
+      [0.040, 0.0,   0.0,
+       0.0,   0.040, 0.0,
+       0.0,   0.0,   0.060]

@@ -1,0 +1,9 @@
+mission:
+
+  retry_navigation: 3
+
+  capture_delay: 2.0
+
+  crop_ratio: 0.4
+
+  dataset_path: "~/tomato_dataset"

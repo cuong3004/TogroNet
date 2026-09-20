@@ -1,0 +1,5 @@
+class,merged_from,num_images_train,num_objects_train,num_images_test,num_objects_test,num_images_total,num_objects_total,avg_objects_per_image_train,avg_objects_per_image_test
+green,b_green+l_green,594,5134,140,1316,734,6450,8.64,9.4
+half_ripened,b_half_ripened+l_half_ripened,469,1317,119,339,588,1656,2.81,2.85
+fully_ripened,b_fully_ripened+l_fully_ripened,436,1330,99,341,535,1671,3.05,3.44
+ALL,,643,7781,161,1996,804,9777,12.1,12.4

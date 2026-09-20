@@ -1,0 +1,11 @@
+slam_toolbox:
+  ros__parameters:
+
+    base_frame: base_footprint
+    # Giảm tần suất xuất bản TF từ 50 Hz xuống 20 Hz
+    transform_publish_period: 0.05
+
+    # Giảm tần suất cập nhật bản đồ
+    map_update_interval: 2.0
+    # Không giữ dữ liệu phục vụ chỉnh pose graph bằng RViz
+    enable_interactive_mode: false
